@@ -120,10 +120,10 @@ I took inspiration and direction from [this blog post](https://fedidat.com/420-x
 
 - Please let me know if you find any errors in this repository or have ideas for making it more broadly useful via any of the following channels:
   
-  - File an [Issue](https://github.com/jgrussell/usda-sr24/issues)
+  - File an [Issue](https://github.com/jgrussell/ezxlayout/issues)
   
-  - Log a [Pull request (PR)](https://github.com/jgrussell/usda-sr24/pulls)
+  - Log a [Pull request (PR)](https://github.com/jgrussell/ezxlayout/pulls)
   
-  - Start a [Discussion](https://github.com/jgrussell/usda-sr24/discussions) 
+  - Start a [Discussion](https://github.com/jgrussell/ezxlayout/discussions) 
 
 - Note:  I am not likely to be interested refactoring this repository for performance, style, etc. at this time.
