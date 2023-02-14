@@ -1,0 +1,30 @@
+#!/bin/sh
+# 
+# This is currently just a POSIX script to run 
+# the ./layout.sh script in its own terminal window.
+# 
+# You may need to edit this script to make it work on 
+# your system, terminal of choice, etc.
+# 
+# Eventually, the functionality of these scripts may be
+# replaced with a compiled application, likely Rust.
+# 
+if [ $(xrandr | grep " connected" | wc -l) = 1 ]; then
+   : # Only one display detected; exit without doing anything.
+else
+   my_dir=$( dirname -- "$( readlink -f -- $0)")
+   if [ -z "$DISPLAY" -o -z "$XAUTHORITY" ]; then # Likely here from udev rule
+      for u in $(users); do # try displaying for all logged in users
+         if [ -f /home/${u}/.Xauthority ]; then # Can we fine X11 secrects file
+             for d in $(ls /tmp/.X11-unix | tr 'X' ':'); do # try on all X displays
+                export DISPLAY=${d}
+                export XAUTHORITY=/home/${u}/.Xauthority
+                nohup xfce4-terminal --title "EZXLayout udev" --hide-menubar --hide-toolbar --execute ${my_dir}/layout.sh &
+             done
+         fi
+      done
+   else # X11 environment is already set
+      xfce4-terminal --title "EZXLayout" --hide-menubar --hide-toolbar --execute ${my_dir}/layout.sh
+      xfce4-panel --restart # Fix XFCE panel wonkiness following display changes; doesn't work from udev root env
+   fi
+fi

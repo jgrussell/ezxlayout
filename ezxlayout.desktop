@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=EZXLayout
+GenericName=Choose X11 screen layout
+Icon=display
+Exec=ezxlayout
+Terminal=true
+Type=Application
+Categories=Settings;HardwareSettings;
+StartupNotify=true
