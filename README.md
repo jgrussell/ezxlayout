@@ -1,6 +1,6 @@
 # What?
 
-These are the files and scripts that I am using to configure my X11 displays under XFCE.
+These are the files and scripts that I am using to configure my X11 displays (various laptops connected to various external monitors) under XFCE.
 
 I am guessing a similar, possibly exactly the same, approach would work on other desktops (KDE, GNOME, LXDE, LXQt, etc.) with a bit of script editing but be completely useless under Wayland.
 
@@ -15,6 +15,7 @@ This is currently only for my personal use; but, I will likely update/extend thi
    - Cloned version of this repository (ideally in your `$HOME` directory)
    - [ARandR](https://christian.amsuess.com/tools/arandr/)
    - [xrandr](https://www.x.org/releases/X11R7.5/doc/man/man1/xrandr.1.html)
+   - [xfce4-terminal](https://docs.xfce.org/apps/terminal/start) (or edit [ezxlayout](./ezxlayout) appropriately)
 
 2. Disable the automatic XFCE display event by opening [`xfce4-display-settings`](https://docs.xfce.org/xfce/xfce4-settings/4.16/display) (or just open the Whisker menu and look for *Display*), then toggle *Configure new displays when connected* to off. (This option is on the *Advanced* tab of the *Display* window.)
 
@@ -92,9 +93,11 @@ I took inspiration and direction from [this blog post](https://fedidat.com/420-x
 
 ### Just a list of items that I might tackle if I ever get back to this project.
 
-- [ ] Add logging
+- [x] Add logging
 
-- [ ] Clean handling of calls from udev events
+- [ ] Clean up extra terminal windows/processes from udev events (this should only be an issues with multiple users running X11 displays)
+
+- [ ] Limit to only run one instance of [layout.sh](./layout.sh) per logged in user
 
 - [ ] Add example of changing audio output to external monitor to files in the [layouts](./layouts) directory
 
@@ -102,9 +105,17 @@ I took inspiration and direction from [this blog post](https://fedidat.com/420-x
 
 - [ ] Enhance [layout.sh](./layout.sh) and [ezxlayout](./ezxlayout) along with usage procedures to reduce/eliminate need for editing the scripts when moving to new hardware
 
-- [ ] Replace [ezxlayout](./ezxlayout) with a rust program utilizing [tui-rs](https://github.com/fdehau/tui-rs) for the interface
+- [ ] Re-implement this functionality via a rust program
 
 - [ ] Expand this project to open various application windows in specific locations based on the monitor layout selected
+
+- [ ] Display only menu choices valid for currently attached hardware
+  
+  - [ ] Add default actions with user defined delay(s)
+  
+  - [ ] Automatically run script if only one valid script found
+  
+  - [ ] Run default if nothing selected within allowed time 
 
 - [ ] Support for more than one external display
 
@@ -120,10 +131,10 @@ I took inspiration and direction from [this blog post](https://fedidat.com/420-x
 
 - Please let me know if you find any errors in this repository or have ideas for making it more broadly useful via any of the following channels:
   
-  - File an [Issue](https://github.com/jgrussell/ezxlayout/issues)
+  - File an [Issue](https://github.com/jgrussell/ezxlayout/issues) (Please enable logging in both [layout.sh](./layout.sh) and [ezxlayout](./ezxlayout) and include resulting file if reporting an error, bug, etc.)
   
   - Log a [Pull request (PR)](https://github.com/jgrussell/ezxlayout/pulls)
   
   - Start a [Discussion](https://github.com/jgrussell/ezxlayout/discussions) 
 
-- Note:  I am not likely to be interested refactoring this repository for performance, style, etc. at this time.
+- Note:  I am not likely to be interested refactoring this repository for performance, style, etc. at this time as I am considering this a functional prototype rather than polished software.

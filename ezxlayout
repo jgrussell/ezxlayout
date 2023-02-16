@@ -9,22 +9,28 @@
 # Eventually, the functionality of these scripts may be
 # replaced with a compiled application, likely Rust.
 # 
-if [ $(xrandr | grep " connected" | wc -l) = 1 ]; then
-   : # Only one display detected; exit without doing anything.
-else
-   my_dir=$( dirname -- "$( readlink -f -- $0)")
-   if [ -z "$DISPLAY" -o -z "$XAUTHORITY" ]; then # Likely here from udev rule
-      for u in $(users); do # try displaying for all logged in users
-         if [ -f /home/${u}/.Xauthority ]; then # Can we fine X11 secrects file
-             for d in $(ls /tmp/.X11-unix | tr 'X' ':'); do # try on all X displays
-                export DISPLAY=${d}
-                export XAUTHORITY=/home/${u}/.Xauthority
-                nohup xfce4-terminal --title "EZXLayout udev" --hide-menubar --hide-toolbar --execute ${my_dir}/layout.sh &
-             done
-         fi
-      done
-   else # X11 environment is already set
-      xfce4-terminal --title "EZXLayout" --hide-menubar --hide-toolbar --execute ${my_dir}/layout.sh
-      xfce4-panel --restart # Fix XFCE panel wonkiness following display changes; doesn't work from udev root env
-   fi
+# Simple logging setup
+log_file=$( dirname -- "$( readlink -f -- $0)")/ezxlayout.log 
+log_file=/dev/null # Comment/remove this line to enable simple logging
+#
+echo "ezxlayout $(date -Ins) PID=$$ Enter" >> $log_file
+my_dir=$( dirname -- "$( readlink -f -- $0)")
+if [ -z "$DISPLAY" -o -z "$XAUTHORITY" ]; then 
+   echo "ezxlayout $(date -Ins) PID=$$ X11 environment not set; try all users and X11 displays." >> $log_file
+   for u in $(users); do # try displaying for all logged in users
+      echo "ezxlayout $(date -Ins) PID=$$ for user=$u" >> $log_file
+      if [ -f /home/${u}/.Xauthority ]; then # Can we find X11 secrects file
+          echo "ezxlayout $(date -Ins) PID=$$ for /home/${u}/.Xauthority" >> $log_file
+          for d in $(ls /tmp/.X11-unix | tr 'X' ':'); do # try on all X displays
+             echo "ezxlayout $(date -Ins) PID=$$ for user=$u and DISPLAY=${d}" >> $log_file
+             export DISPLAY=${d}
+             export XAUTHORITY=/home/${u}/.Xauthority
+             nohup xfce4-terminal --title "EZXLayout udev" --hide-menubar --hide-toolbar --execute ${my_dir}/layout.sh &
+          done
+      fi
+   done
+else # X11 environment is already set
+   echo "ezxlayout $(date -Ins) PID=$$ X11 environment is already set" >> $log_file
+   xfce4-terminal --title "EZXLayout" --hide-menubar --hide-toolbar --execute ${my_dir}/layout.sh 
 fi
+echo "ezxlayout $(date -Ins) PID=$$ Exiting" >> $log_file
