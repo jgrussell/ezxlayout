@@ -31,18 +31,18 @@ This is currently only for my personal use; but, I will likely update/extend thi
 
 6. Optional steps to make this more useful:
    
-   1. Set the execute bit of [ezxlayout](./ezxlayout) and [layout.sh](./layout.sh) only for the current or group of users who should have access.
+   1. Set the execute bit of [ezxlayout](./ezxlayout) and [layout.sh](./layout.sh) (only for the current user, or group of users, who should have access).
       
       - This is not a requirement but may make your life easier; otherwise, you will need to edit the scripts.
       - I recommend only setting this bit for the user(s) who will actually be running this since these scripts could potentially be used for malicious purposes if open to all.
    
    2. Add the location of [ezxlayout](./ezxlayout) to the `$PATH` search path.
       
-      - If you do this, you will not need to edit  [ezxlayout.desktop](./ezxlayout.desktop) nor use the full path to [ezxlayout](./ezxlayout) from the command line; but, you may still need to use the full path in an XFCE application shortcut definition, etc.
+      - If you do this, you will not need to edit  [ezxlayout.desktop](./ezxlayout.desktop) nor use the full path to [ezxlayout](./ezxlayout) from the command line, etc.
       
       - This is obviously not a requirement if you prefer keeping your `$PATH` more succinct. 
       
-      - For my XFCE desktops, you can run this from a command line in this repository's directory:  
+      - For my MX Linux XFCE desktops, running this from a command line in this repository's directory accomplishes this:
         
           `echo export PATH="${PWD}/ezxlayout:\$PATH" >> ~/.xsessionrc`
       
@@ -55,21 +55,30 @@ This is currently only for my personal use; but, I will likely update/extend thi
    
    4. Create soft links to the [ezxlayout.desktop](./ezxlayout.desktop) file to add this to your menu and/or startup groups.
       
-      - For XFCE, you can do this by executing the following commands in the directory containing your local version of this repository:
+      - For XFCE (and likely most other desktop environments) you can do this by executing the following commands in the directory containing your local version of this repository:
         
         - `ln -s ${PWD}/ezxlayout.desktop ~/.local/share/applications/ezxlayout.desktop`
         - `ln -s ${PWD}/ezxlayout.desktop ~/.config/autostart/ezxlayout.desktop`
       
       - If you have not included this project's directory in your `$PATH` search path, you will need to edit the `Exec=` line of the [ezxlayout.desktop](./ezxlayout.desktop) file to include the absolute path to the [ezxlayout](./ezxlayout) file.
-        5- Create your personal [10-ezxlayout.rules](./10-ezxlayout.rules) file to trigger this functionality when your system detects a monitor being plugged in or unplugged via [udev](https://opensource.com/article/18/11/udev). (Please only do this if your are comfortable editing and debugging these files; the current approach as a very high probability of creating orphan processes on your system; proceed with caution if at all. **You have been warned!!!**)
-        1- Create the template by running the following from a command line in this repository's directory:  
-        
-         `sudo cp ${PWD}/10-ezxlayout.rules /etc/udev/rules.d/10-ezxlayout.rules`
-        2- Make this script your own by updating it with a full, absolute path to the [ezxlayout](./ezxlayout) file since this will run as root:
-        
+   
+   5. Create your personal [10-ezxlayout.rules](./10-ezxlayout.rules) file to trigger this functionality when your system detects a monitor being plugged in or unplugged via [udev](https://opensource.com/article/18/11/udev). 
+      
+      Please only do this if your are comfortable editing and debugging these files; the current approach as a very high probability of creating orphan processes on your system; proceed with caution if at all.
+      
+      **You have been warned!!!**
+      
+      1. Create the template by running the following from a command line in this repository's directory: 
+         
+          `sudo cp ${PWD}/10-ezxlayout.rules /etc/udev/rules.d/10-ezxlayout.rules`   
+      
+      2. Make this script your own by updating it with a full, absolute path to the [ezxlayout](./ezxlayout) file since this will run as root:
+         
          `sudo vi /etc/udev/rules.d/10-ezxlayout.rules`
-        3- Load the new rule:  `sudo udevadm control --reload-rules`
-        4- See if the rule will work:  `sudo udevadm trigger`
+      
+      3. Load the new rule:  `sudo udevadm control --reload-rules`
+      
+      4. See if the rule will work:  `sudo udevadm trigger`
 
 # Why?
 
