@@ -79,6 +79,8 @@ This is currently only for my personal use; but, I will likely update/extend thi
       3. Load the new rule:  `sudo udevadm control --reload-rules`
       
       4. See if the rule will work:  `sudo udevadm trigger`
+   
+   6. Install [PulseAudio Device Switcher](https://github.com/dogue/pads) to easily move audio output to preferred device.  See [ExampleLaptopWithLandscape48.sh](.layouts/ExampleLaptopWithLandscape48.sh) for and example of its usage.
 
 # Why?
 
@@ -108,7 +110,7 @@ I took inspiration and direction from [this blog post](https://fedidat.com/420-x
 
 - [ ] Limit to only run one instance of [layout.sh](./layout.sh) per logged in user
 
-- [ ] Add example of changing audio output to external monitor to files in the [layouts](./layouts) directory
+- [x] Add example of changing audio output to external monitor to files in the [layouts](./layouts) directory
 
 - [ ] Basic automated testing/QA
 
