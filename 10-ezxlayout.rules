@@ -1,1 +1,1 @@
-ACTION=="change", SUBSYSTEM=="drm", RUN+="ezxlayout"
+ACTION=="change", SUBSYSTEM=="drm", RUN+="ezxlayout -a"

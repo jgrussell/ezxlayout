@@ -106,6 +106,8 @@ I took inspiration and direction from [this blog post](https://fedidat.com/420-x
 
 - [x] Add logging
 
+- [x] Find X.org sessions when running as root from udev rule.
+
 - [ ] Clean up extra terminal windows/processes from udev events (this should only be an issues with multiple users running X11 displays)
 
 - [ ] Limit to only run one instance of [layout.sh](./layout.sh) per logged in user

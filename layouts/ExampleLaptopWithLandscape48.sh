@@ -5,3 +5,6 @@ xrandr --output eDP --mode 1920x1080 --pos 0x2160 --rotate normal --output HDMI-
 # Move PulseAudio output to HDMI device
 # https://github.com/dogue/pads must be installed into the default path for this example
 pads set $(pads list | grep 'HDMI' | head -1 | cut -d[ -f2 | cut -d] -f1)
+#
+# Restart XFCE Panels since they can get wonkey when changing monitor configurations
+xfce4-panel --restart

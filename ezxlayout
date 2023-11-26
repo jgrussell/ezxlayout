@@ -15,22 +15,47 @@ log_file=/dev/null # Comment/remove this line to enable simple logging
 #
 echo "ezxlayout $(date -Ins) PID=$$ Enter" >> $log_file
 my_dir=$( dirname -- "$( readlink -f -- $0)")
-if [ -z "$DISPLAY" -o -z "$XAUTHORITY" ]; then 
-   echo "ezxlayout $(date -Ins) PID=$$ X11 environment not set; try all users and X11 displays." >> $log_file
-   for u in $(users); do # try displaying for all logged in users
-      echo "ezxlayout $(date -Ins) PID=$$ for user=$u" >> $log_file
-      if [ -f /home/${u}/.Xauthority ]; then # Can we find X11 secrects file
-          echo "ezxlayout $(date -Ins) PID=$$ for /home/${u}/.Xauthority" >> $log_file
-          for d in $(ls /tmp/.X11-unix | tr 'X' ':'); do # try on all X displays
-             echo "ezxlayout $(date -Ins) PID=$$ for user=$u and DISPLAY=${d}" >> $log_file
-             export DISPLAY=${d}
-             export XAUTHORITY=/home/${u}/.Xauthority
-             nohup xfce4-terminal --title "EZXLayout udev" --hide-menubar --hide-toolbar --execute ${my_dir}/layout.sh &
-          done
-      fi
-   done
-else # X11 environment is already set
-   echo "ezxlayout $(date -Ins) PID=$$ X11 environment is already set" >> $log_file
-   xfce4-terminal --title "EZXLayout" --hide-menubar --hide-toolbar --execute ${my_dir}/layout.sh 
+if [ $1 = $(echo '-a') ]; then # run for all logged on users running an xfce session
+   echo "ezxlayout $(date -Ins) PID=$$ Running for all logged on users" >> $log_file
+   if [ $(echo 0) = $(id -u) ]; then
+      echo "ezxlayout $(date -Ins) PID=$$ -a option processesing" >> $log_file
+      for d in $(ps -C xfce4-session -o euid=,pid= | tr -s ' ' '-'); do # Running XFCE sessions
+         echo "ezxlayout $(date -Ins) PID=$$ ps line = $d" >> $log_file
+         xuid=$(echo $d | cut -f2 -d'-')
+         xpid=$(echo $d | cut -f3 -d'-')
+         unset XAUTHORITY
+         unset DISPLAY
+         unset DBUS_SESSION_BUS_ADDRESS
+         echo "ezxlayout $(date -Ins) PID=$$ xuid=$xuid xpid=$xpid" >> $log_file
+         for vdef in $(strings /proc/${xpid}/environ); do # Loop through env
+         	echo "ezxlayout $(date -Ins) PID=$$ vdef = $vdef" >> $log_file
+         	vname=$(echo $vdef | cut -f1 -d'=')
+         	case ${vname} in
+         	   XAUTHORITY) export $vdef
+         	   ;;
+         	   DISPLAY) export $vdef
+         	   ;;
+                   DBUS_SESSION_BUS_ADDRESS) export $vdef
+         	  ;;
+         	esac
+         done
+         u=$(id -un ${xuid})
+         echo "ezxlayout $(date -Ins) PID=$$ for user=$u" >> $log_file
+         echo "ezxlayout $(date -Ins) PID=$$ DISPLAY=${DISPLAY}" >> $log_file
+         echo "ezxlayout $(date -Ins) PID=$$ XAUTHORITY=${XAUTHORITY}" >> $log_file
+         echo "ezxlayout $(date -Ins) PID=$$ DBUS_SESSION_BUS_ADDRESS=${DBUS_SESSION_BUS_ADDRESS}" >> $log_file
+         if [ -z "$DISPLAY" -o -z "$XAUTHORITY" -o -z "DBUS_SESSION_BUS_ADDRESS" ]; then
+            echo "ezxlayout $(date -Ins) PID=$$ Missing ENV variables for this session" >> $log_file
+         else
+            echo "ezxlayout $(date -Ins) PID=$$ nohup su -c...." >> $log_file 
+            nohup su -c "xfce4-terminal --hide-menubar --hide-toolbar --execute ${my_dir}/layout.sh"  $u &
+         fi
+      done
+   else
+      echo "ezxlayout $(date -Ins) PID=$$ -a option must be run as root user" >> $log_file
+   fi
+else
+   echo "ezxlayout $(date -Ins) PID=$$ Running with existing X11 environment" >> $log_file
+   xfce4-terminal --title "EZXLayout" --hide-menubar --hide-toolbar --execute ${my_dir}/layout.sh
 fi
 echo "ezxlayout $(date -Ins) PID=$$ Exiting" >> $log_file
